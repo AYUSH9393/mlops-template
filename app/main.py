@@ -9,3 +9,12 @@ def read_root():
 @app.get("/health")
 def health():
     return {"status": "ok"}
+
+@app.get("/square/{num}")
+def square(num: int):
+    return {"number": num, "square": num ** 2}
+
+@app.get("/greet/")
+def greet(name: str = "Ayush"):
+    return {"greeting": f"Hello, {name}! 👋"}
+
