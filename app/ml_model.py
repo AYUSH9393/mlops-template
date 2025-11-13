@@ -13,10 +13,20 @@ class LogisticRegressionModel(nn.Module):
 
 # Training a dummy example
 if __name__ == "__main__":
-    X = torch.tensor([[0.1, 0.2], [0.9, 0.8], [0.5, 0.4], [0.7, 0.6]])
-    y = torch.tensor([[0.0], [1.0], [0.0], [1.0]])
+    X = torch.tensor([
+        [0.1, 0.2, 0.3],
+        [0.9, 0.8, 0.7],
+        [0.4, 0.3, 0.2],
+        [0.6, 0.7, 0.8]
+    ])
+    y = torch.tensor([
+        [0.0],
+        [1.0],
+        [0.0],
+        [1.0]
+    ])
 
-    model = LogisticRegressionModel(2)
+    model = LogisticRegressionModel(3)
     criterion = nn.BCELoss()
     optimizer = torch.optim.SGD(model.parameters(), lr=0.1)
 
