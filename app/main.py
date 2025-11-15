@@ -47,9 +47,9 @@ def version():
 # def read_root():
 #     return {"message": "Hello, Ayush! Welcome to your MLOps journey 🚀"}
 
-# @app.get("/health")
-# def health():
-#     return {"status": "ok"}
+@app.get("/health")
+def health():
+    return {"status": "ok"}
 
 # @app.get("/square/{num}")
 # def square(num: int):
