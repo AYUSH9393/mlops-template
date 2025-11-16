@@ -1,6 +1,7 @@
 import torch
 import torch.nn as nn
 
+
 # Simple logistic regression model for binary classification
 class LogisticRegressionModel(nn.Module):
     def __init__(self, n_inputs):
@@ -11,20 +12,13 @@ class LogisticRegressionModel(nn.Module):
     def forward(self, x):
         return self.sigmoid(self.linear(x))
 
+
 # Training a dummy example
 if __name__ == "__main__":
-    X = torch.tensor([
-        [0.1, 0.2, 0.3],
-        [0.9, 0.8, 0.7],
-        [0.4, 0.3, 0.2],
-        [0.6, 0.7, 0.8]
-    ])
-    y = torch.tensor([
-        [0.0],
-        [1.0],
-        [0.0],
-        [1.0]
-    ])
+    X = torch.tensor(
+        [[0.1, 0.2, 0.3], [0.9, 0.8, 0.7], [0.4, 0.3, 0.2], [0.6, 0.7, 0.8]]
+    )
+    y = torch.tensor([[0.0], [1.0], [0.0], [1.0]])
 
     model = LogisticRegressionModel(3)
     criterion = nn.BCELoss()
