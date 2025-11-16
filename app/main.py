@@ -41,7 +41,11 @@ def predict(data: InputData, threshold: float = 0.5):
 
 @app.get("/version")
 def version():
-    return {"model_version": "1.0.0", "framework": "PyTorch", "author": "Ayush Patel"}
+    return {
+        "model_version": "1.0.0",
+        "framework": "PyTorch",
+        "author": "Ayush Patel"
+    }
 
 
 # @app.get("/")
