@@ -14,7 +14,6 @@ async def metrics_middleware(request: Request, call_next):
     # Track in-flight requests
     IN_FLIGHT.labels(endpoint=endpoint).inc()
 
-    start = time.time()
     status = "500"  
 
     try:

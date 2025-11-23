@@ -7,7 +7,7 @@ from prometheus_client import CONTENT_TYPE_LATEST, generate_latest
 from pydantic import BaseModel
 
 from app.logger import get_logger
-from app.metrics import INFERENCE_LATENCY, REQUEST_COUNT  # <-- important
+from app.metrics import INFERENCE_LATENCY, REQUEST_COUNT
 from app.middleware import metrics_middleware
 from app.ml_model import LogisticRegressionModel
 
@@ -74,7 +74,9 @@ def predict(data: InputData, threshold: float = 0.5):
 
 @app.get("/version")
 def version():
-    return {"model_version": "1.0.0", "framework": "PyTorch", "author": "Ayush Patel"}
+    return {"model_version": "1.0.0", 
+            "framework": "PyTorch", 
+            "author": "Ayush Patel"}
 
 
 @app.get("/health")
