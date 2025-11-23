@@ -1,0 +1,36 @@
+# app/middleware.py
+
+import time
+from fastapi import Request
+from app.metrics import REQUEST_COUNT, ERROR_COUNT, IN_FLIGHT
+
+
+async def metrics_middleware(request: Request, call_next):
+    endpoint = request.url.path
+    method = request.method
+
+    # Track in-flight requests
+    IN_FLIGHT.labels(endpoint=endpoint).inc()
+
+    start = time.time()
+    status = "500"  # default to 500 if exception happens before status extraction
+
+    try:
+        response = await call_next(request)
+        status = str(response.status_code)
+    except Exception as exc:
+        # Count exceptions
+        ERROR_COUNT.labels(endpoint=endpoint, exception_type=type(exc).__name__).inc()
+        raise
+    finally:
+        # Decrease in-flight
+        IN_FLIGHT.labels(endpoint=endpoint).dec()
+
+        # Count request (always increment)
+        REQUEST_COUNT.labels(
+            method=method,
+            endpoint=endpoint,
+            http_status=status
+        ).inc()
+
+    return response
