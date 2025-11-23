@@ -15,20 +15,23 @@ async def metrics_middleware(request: Request, call_next):
     IN_FLIGHT.labels(endpoint=endpoint).inc()
 
     start = time.time()
-    status = "500"  # default to 500 if exception happens before status extraction
+    status = "500"  
 
     try:
         response = await call_next(request)
         status = str(response.status_code)
     except Exception as exc:
         # Count exceptions
-        ERROR_COUNT.labels(endpoint=endpoint, exception_type=type(exc).__name__).inc()
+        ERROR_COUNT.labels(endpoint=endpoint, 
+                           exception_type=type(exc).__name__).inc()
         raise
     finally:
         # Decrease in-flight
         IN_FLIGHT.labels(endpoint=endpoint).dec()
 
         # Count request (always increment)
-        REQUEST_COUNT.labels(method=method, endpoint=endpoint, http_status=status).inc()
+        REQUEST_COUNT.labels(method=method, 
+                             endpoint=endpoint, 
+                             http_status=status).inc()
 
     return response
