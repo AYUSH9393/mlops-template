@@ -1,15 +1,15 @@
-import torch
 import time
+
+import torch
 from fastapi import FastAPI
 from fastapi.responses import Response
+from prometheus_client import CONTENT_TYPE_LATEST, generate_latest
 from pydantic import BaseModel
 
-from app.ml_model import LogisticRegressionModel
 from app.logger import get_logger
+from app.metrics import INFERENCE_LATENCY, REQUEST_COUNT  # <-- important
 from app.middleware import metrics_middleware
-from app.metrics import REQUEST_COUNT, INFERENCE_LATENCY  # <-- important
-from prometheus_client import generate_latest, CONTENT_TYPE_LATEST
-
+from app.ml_model import LogisticRegressionModel
 
 app = FastAPI()
 
@@ -52,14 +52,14 @@ def predict(data: InputData, threshold: float = 0.5):
     # -----------------------------
     with torch.no_grad():
         start = time.time()
-        with INFERENCE_LATENCY.time():     # Prometheus histogram
+        with INFERENCE_LATENCY.time():  # Prometheus histogram
             prob = model(inputs).item()
         latency = round(time.time() - start, 4)
 
     logger.info(f"Inference latency: {latency}s")
 
     # Count request
-    #REQUEST_COUNT.inc()
+    # REQUEST_COUNT.inc()
 
     # Generate classification
     prediction = 1 if prob >= threshold else 0
@@ -68,17 +68,13 @@ def predict(data: InputData, threshold: float = 0.5):
         "threshold_used": threshold,
         "probability": round(prob, 4),
         "prediction": prediction,
-        "latency_seconds": latency
+        "latency_seconds": latency,
     }
 
 
 @app.get("/version")
 def version():
-    return {
-        "model_version": "1.0.0",
-        "framework": "PyTorch",
-        "author": "Ayush Patel"
-    }
+    return {"model_version": "1.0.0", "framework": "PyTorch", "author": "Ayush Patel"}
 
 
 @app.get("/health")

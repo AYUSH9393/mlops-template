@@ -1,8 +1,10 @@
 # app/middleware.py
 
 import time
+
 from fastapi import Request
-from app.metrics import REQUEST_COUNT, ERROR_COUNT, IN_FLIGHT
+
+from app.metrics import ERROR_COUNT, IN_FLIGHT, REQUEST_COUNT
 
 
 async def metrics_middleware(request: Request, call_next):
@@ -27,10 +29,6 @@ async def metrics_middleware(request: Request, call_next):
         IN_FLIGHT.labels(endpoint=endpoint).dec()
 
         # Count request (always increment)
-        REQUEST_COUNT.labels(
-            method=method,
-            endpoint=endpoint,
-            http_status=status
-        ).inc()
+        REQUEST_COUNT.labels(method=method, endpoint=endpoint, http_status=status).inc()
 
     return response

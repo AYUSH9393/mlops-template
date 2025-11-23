@@ -1,6 +1,6 @@
 # app/metrics.py
 
-from prometheus_client import Counter, Histogram, Gauge
+from prometheus_client import Counter, Gauge, Histogram
 
 # -----------------------------------------
 # Count total API requests (method + path + status)
@@ -30,7 +30,7 @@ IN_FLIGHT = Gauge(
 )
 
 # -----------------------------------------
-# Track model inference latency 
+# Track model inference latency
 # (histogram allows P95/P99 latency calculation)
 # -----------------------------------------
 INFERENCE_LATENCY = Histogram(
